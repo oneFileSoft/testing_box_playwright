@@ -79,8 +79,8 @@ export default defineConfig({
   timeout: 30000, //global timeout for running tests... if it runs more - fail the test
   expect:{ timeout: 5000 }, 
   fullyParallel: true,
-  workers: 2,
-  retries:2,
+  workers: 1,
+  retries:1,
   //use: {testidAttribute: 'data-test'},
   projects: [ 
     {
