@@ -73,8 +73,9 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: "tests/",
-  reporter: [['html'],
-             ['junit', { outputFile: 'test-results/junit-test-result.xml' }] ],
+  reporter: [ ['html', { outputFolder: 'playwright-report' }],
+              ['junit', { outputFile: 'test-results/junit.xml' }]
+  ],           
   timeout: 30000, //global timeout for running tests... if it runs more - fail the test
   expect:{ timeout: 5000 }, 
   fullyParallel: true,
