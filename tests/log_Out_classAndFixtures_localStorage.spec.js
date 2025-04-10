@@ -27,7 +27,7 @@ login_procedure('Add Item to the cart', async ({ authenticatedPage }) => {
 
     const profilePage = new My_LogOutProfile(authenticatedPage.pom_page);
     let cartValueFromLocalStorage = await profilePage.getValueOfLocalStorage("cart");
-    console.log("Before adding to the cart, expected 'null' cause 'cart' not been created " + cartValueFromLocalStorage);
+    // console.log("Before adding to the cart, expected 'null' cause 'cart' not been created " + cartValueFromLocalStorage);
     expect (cartValueFromLocalStorage === null);
     await profilePage.addToCart(); 
     await profilePage.checkCart_numberItems(1);
