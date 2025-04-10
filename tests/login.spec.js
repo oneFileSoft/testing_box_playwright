@@ -30,7 +30,7 @@ test('test 1 - some experiments', async ({ page }) => {
   //   await page.getByText('LogouT').click();                   // NOT CASE Sencetive!!!!
   currentUrl = page.url();
   console.log("url logged-out profile: " + currentUrl);
-  expect(currentUrl).toContain('a---login');
+  expect(currentUrl).toContain('login');
 
  });
 
