@@ -72,6 +72,9 @@
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
+  use: {
+    baseURL: process.env.BASE_URL || 'https://testingbox.pw',
+  },
   testDir: "tests/",
   reporter: [ ['html', { outputFolder: 'playwright-report' }],
               ['junit', { outputFile: 'test-results/junit.xml' }]
