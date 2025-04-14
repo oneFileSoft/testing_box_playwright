@@ -89,10 +89,10 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
     // const toastText = (await page.locator('.Toastify__toast').textContent()).replace('\n', '');
     expect (toastText).toContain(fName + " " + lName + "Your email has been sent successfully!");
 
-    expect (await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe(null);
-    expect (await page.locator('input[name="lastName"]').getAttribute('placeholder')).toBe(null);
-    expect (await page.locator('input[name="yourWebsite"]').getAttribute('placeholder')).toBe(null);
-    expect (await page.locator('input[name="yourEmail"]').getAttribute('placeholder')).toBe(null);
-    expect (await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe(null);
+    expect (await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe("");
+    expect (await page.locator('input[name="lastName"]').getAttribute('placeholder')).toBe("");
+    expect (await page.locator('input[name="yourWebsite"]').getAttribute('placeholder')).toBe("");
+    expect (await page.locator('input[name="yourEmail"]').getAttribute('placeholder')).toBe("");
+    expect (await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe("");
   });
  
