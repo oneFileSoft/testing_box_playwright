@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
   await page.waitForLoadState();
 });
 
-test('Prevention of Submit of Email, with all empty fields', async ({ page }) => {
+test('Authenticate existing User', async ({ page }) => {
   await page.getByRole('img', { name: 'DB' }).click();
   await page.getByRole('textbox', { name: 'Your User Name' }).fill('test');
   await page.getByRole('textbox', { name: 'Your User Name' }).press('Tab');
