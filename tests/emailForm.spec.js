@@ -4,6 +4,8 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/');
   console.log(' ***********************    Current URL: ', page.url());
   await page.waitForLoadState();
+  // make sure there is no toast
+  await page.locator('.Toastify__toast').waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
 });
 
 test('Prevention of Submit of Email, with all empty fields', async ({ page }) => {
@@ -23,7 +25,6 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
     await page.getByRole('textbox', { name: 'First name is required' }).fill('John');
     await page.getByRole('textbox', { name: 'Last name is required' }).click();
     expect (await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe("");
-
   });
 
   test('Empty FirstName, lastName and message lost fokus', async ({ page }) => {
