@@ -82,12 +82,12 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
 
     await page.getByText('Submit').click();
     await page.waitForSelector('.Toastify__toast--success', { state: 'visible' });
-    const toast = page.locator('.Toastify__toast--success');
-    await expect(toast).toHaveText(/Your email has been sent/);
-    await expect(page.locator('.Toastify__toast')).toHaveText(/Your email has been sent/);
+    const toastText = page.locator('.Toastify__toast--success');
+    await expect(toast).toHaveText(/Your email has been sent/).textContent().replace('\n', '');
 
+    // await expect(page.locator('.Toastify__toast')).toHaveText(/Your email has been sent/);
     // const toastText = (await page.locator('.Toastify__toast').textContent()).replace('\n', '');
-    // expect (toastText).toContain(fName + " " + lName + "Your email has been sent successfully!");
+    expect (toastText).toContain(fName + " " + lName + "Your email has been sent successfully!");
 
     expect (await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe(null);
     expect (await page.locator('input[name="lastName"]').getAttribute('placeholder')).toBe(null);
