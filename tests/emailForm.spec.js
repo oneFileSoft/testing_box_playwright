@@ -76,7 +76,7 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
     await page.locator('input[name="yourWebsite"]').fill(webSite);
     const email = "abc" + getRandomInt() + "@yahoo.com"
     await page.locator('input[name="yourEmail"]').fill(email);
-    await page.locator('textarea[name="message"]').fill(fName + " " + lName);
+    await page.locator('textarea[name="message"]').fill("Test Email: " + fName + " " + lName);
 
     await page.getByText('Submit').click();
     await expect(page.locator('.Toastify__toast')).toHaveText(/Your email has been sent/);
