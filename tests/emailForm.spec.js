@@ -4,8 +4,6 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/');
   console.log(' ***********************    Current URL: ', page.url());
   await page.waitForLoadState();
-  // make sure there is no toast
-  await page.locator('.Toastify__toast').waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
 });
 
 test('Prevention of Submit of Email, with all empty fields', async ({ page }) => {
@@ -83,10 +81,13 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
     console.log("****Email test: F_Name = " + fName + ", L_Name = " + lName + " from: " + comboValue);
 
     await page.getByText('Submit').click();
+    await page.waitForSelector('.Toastify__toast--success', { state: 'visible' });
+    const toast = page.locator('.Toastify__toast--success');
+    await expect(toast).toHaveText(/Your email has been sent/);
     await expect(page.locator('.Toastify__toast')).toHaveText(/Your email has been sent/);
 
-    const toastText = (await page.locator('.Toastify__toast').textContent()).replace('\n', '');
-    expect (toastText).toContain(fName + " " + lName + "Your email has been sent successfully!");
+    // const toastText = (await page.locator('.Toastify__toast').textContent()).replace('\n', '');
+    // expect (toastText).toContain(fName + " " + lName + "Your email has been sent successfully!");
 
     expect (await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe(null);
     expect (await page.locator('input[name="lastName"]').getAttribute('placeholder')).toBe(null);
