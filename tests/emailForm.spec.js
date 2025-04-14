@@ -92,4 +92,3 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
     expect (await page.locator('input[name="yourEmail"]').getAttribute('placeholder')).toBe("");
     expect (await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe("");
   });
- 
