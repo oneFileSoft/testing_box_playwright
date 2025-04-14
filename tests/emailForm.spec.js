@@ -78,6 +78,9 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
     await page.locator('input[name="yourEmail"]').fill(email);
     await page.locator('textarea[name="message"]').fill("Test Email: " + fName + " " + lName);
 
+    const comboValue = await page.locator('select >> option').first().getAttribute('value');
+    console.log("****Email test: F_Name = " + fName + ", L_Name = " + lName + " from: " + comboValue);
+
     await page.getByText('Submit').click();
     await expect(page.locator('.Toastify__toast')).toHaveText(/Your email has been sent/);
 
