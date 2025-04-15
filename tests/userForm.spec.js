@@ -46,6 +46,7 @@ test('Authenticate existing User', async ({ page }) => {
   expect (await page.getByRole('textbox', { name: 'Description' })).toBeVisible();
 
   expect (await page.getByPlaceholder('Total Amount')).toBeVisible();
+  expect (await page.locator('input[type="date"]')).toBeVisible();
   //following, because they have unique type - easy to capture by locator
   // expect (await page.locator('input[type="date"]').isVisible()).toBeTruthy();
   
