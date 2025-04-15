@@ -41,7 +41,10 @@ test('Authenticate existing User', async ({ page }) => {
   await page.waitForLoadState('domcontentloaded');
   // not working cause, there is 3 input[type="text", and non of the <input> does not have "name"
   // but playwright can in identifying <input> aka "textbox", but better approach to get it by getByPlaceholder
-  expect (await page.getByPlaceholder('Description')).toBeVisible();
+  // expect (await page.getByRole('textbox', { name: 'Description' })).toBeVisible();
+  await page.getByRole('textbox', { name: 'Description' }).fill('');
+  expect (await page.getByRole('textbox', { name: 'Description' })).toBeVisible();
+
   expect (await page.getByPlaceholder('Total Amount')).toBeVisible();
   //following, because they have unique type - easy to capture by locator
   // expect (await page.locator('input[type="date"]').isVisible()).toBeTruthy();
@@ -49,4 +52,15 @@ test('Authenticate existing User', async ({ page }) => {
   expect (await page.getByRole('heading', { name: 'Add Expense for test' })).toBeVisible(); 
 });
 
- 
+// await page.getByRole('img', { name: 'DB' }).click();
+// await page.getByRole('textbox', { name: 'Your User Name' }).click();
+// await page.getByRole('textbox', { name: 'Your User Name' }).fill('test');
+// await page.getByRole('textbox', { name: 'Your Password' }).click();
+// await page.getByRole('textbox', { name: 'Your Password' }).fill('test');
+// await page.getByRole('button', { name: 'Authenticate' }).click();
+// await page.getByRole('textbox', { name: 'Description' }).click();
+// await page.getByRole('textbox', { name: 'Description' }).fill('descr');
+// await page.getByPlaceholder('Total Amount').click();
+// await page.getByPlaceholder('Total Amount').fill('1');
+// await page.getByRole('button', { name: 'Insert Record' }).click();
+// await page.locator('input[type="date"]').fill('2025-02-12');
