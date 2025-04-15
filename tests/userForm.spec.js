@@ -15,7 +15,7 @@ test('Api test --- GET', async ({ request }, testInfo) => {
   // Get baseURL from test info config
   const baseURL = testInfo.project.use.baseURL;
   console.log(' ***********************    API - URL: ', `${baseURL}${endpoint}`);
-
+  console.log("RESPONSE TEXT: ", await resp.text());
   expect (resp.status()).toBe(200);
   
   const text = await resp.text();
