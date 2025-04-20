@@ -28,7 +28,7 @@ test('Api test --- GET', async ({ request }, testInfo) => {
   // Access specific keys-values in respBody
   console.log("specific values from: respBody.expenses[0].userId=" + respBody.expenses[0].userId + 
     ", respBody.expenses[0].transDescr="+respBody.expenses[0].transDescr);
-  expect (respBody.expenses[0].userId == 46 && respBody.expenses[0].transDescr == "nothing").toBeTruthy();
+  expect (respBody.expenses[0].userId == 46 && respBody.expenses[0].transDescr == "descriptions 1 for John").toBeTruthy();
 });
 
 test('Authenticate existing User', async ({ page }) => {
