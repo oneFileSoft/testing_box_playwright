@@ -78,7 +78,7 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
     await page.locator('textarea[name="message"]').fill("Test Email: " + fName + " " + lName);
 
     const comboValue = await page.locator('select >> option').first().getAttribute('value');
-    console.log("****Email test: F_Name = " + fName + ", L_Name = " + lName + " from: " + comboValue);
+    console.log("****Email test: F_Name = " + fName + ", L_Name = " + lName + " to: " + comboValue);
 
     await page.getByText('Submit').click();
     await page.waitForSelector('.Toastify__toast--success', { state: 'visible' });
