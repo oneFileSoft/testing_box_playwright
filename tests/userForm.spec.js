@@ -31,6 +31,36 @@ test('Api test --- GET', async ({ request }, testInfo) => {
   expect (respBody.expenses[0].userId == 46 && respBody.expenses[0].transDescr == "descriptions 1 for John").toBeTruthy();
 });
 
+test('negative - User obey 25 characters lenght', async ({ page }) => {
+  await page.getByRole('img', { name: 'DB' }).click();
+  await page.locator('#uname').fill('asdfghjklqwertyuiop01234567890');
+  await page.locator('#passw').fill('test');
+  const fieldText = await page.locator('#uname').inputValue();
+  expect (fieldText === "asdfghjklqwertyuiop012345"); 
+});
+
+test('Wrong User name', async ({ page }) => {
+  await page.getByRole('img', { name: 'DB' }).click();
+  await page.locator('#uname').fill('test1');
+  await page.locator('#passw').fill('test');
+  await page.getByRole('button', { name: 'Authenticate' }).click();
+  
+  const messageText = await getTextFromToast(page);
+  expect (messageText).toContain("Error during login: Invalid username or password");
+  expect (await page.getByRole('textbox', { name: 'Description' })).toBeHidden();
+});
+
+test('Wrong password', async ({ page }) => {
+  await page.getByRole('img', { name: 'DB' }).click();
+  await page.locator('#uname').fill('test');
+  await page.locator('#passw').fill('test1');
+  await page.getByRole('button', { name: 'Authenticate' }).click();
+
+  const messageText = await getTextFromToast(page);
+  expect (messageText).toContain("Error during login: Invalid username or password");  
+  expect (await page.getByRole('textbox', { name: 'Description' })).toBeHidden();
+});
+
 test('Authenticate existing User', async ({ page }) => {
   await page.getByRole('img', { name: 'DB' }).click();
   await page.getByRole('textbox', { name: 'Your User Name' }).fill('test');
@@ -39,9 +69,7 @@ test('Authenticate existing User', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Your Password' }).press('Tab');
   await page.getByRole('button', { name: 'Authenticate' }).click();
   await page.waitForLoadState('domcontentloaded');
-  // not working cause, there is 3 input[type="text", and non of the <input> does not have "name"
-  // but playwright can in identifying <input> aka "textbox", but better approach to get it by getByPlaceholder
-  // expect (await page.getByRole('textbox', { name: 'Description' })).toBeVisible();
+
   await page.getByRole('textbox', { name: 'Description' }).fill('');
   expect (await page.getByRole('textbox', { name: 'Description' })).toBeVisible();
 
@@ -53,15 +81,11 @@ test('Authenticate existing User', async ({ page }) => {
   expect (await page.getByRole('heading', { name: 'Add Expense for test' })).toBeVisible(); 
 });
 
-// await page.getByRole('img', { name: 'DB' }).click();
-// await page.getByRole('textbox', { name: 'Your User Name' }).click();
-// await page.getByRole('textbox', { name: 'Your User Name' }).fill('test');
-// await page.getByRole('textbox', { name: 'Your Password' }).click();
-// await page.getByRole('textbox', { name: 'Your Password' }).fill('test');
-// await page.getByRole('button', { name: 'Authenticate' }).click();
-// await page.getByRole('textbox', { name: 'Description' }).click();
-// await page.getByRole('textbox', { name: 'Description' }).fill('descr');
-// await page.getByPlaceholder('Total Amount').click();
-// await page.getByPlaceholder('Total Amount').fill('1');
-// await page.getByRole('button', { name: 'Insert Record' }).click();
-// await page.locator('input[type="date"]').fill('2025-02-12');
+
+async function getTextFromToast(page) {
+  await page.waitForLoadState('domcontentloaded');
+  const toastBox = page.locator(".Toastify__toast").first();
+  await toastBox.waitFor(); // Ensures it's visible before extracting text
+  const messageText = await toastBox.textContent();
+  return messageText;
+}
