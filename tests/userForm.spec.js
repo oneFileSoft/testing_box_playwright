@@ -201,6 +201,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
     // very important to wait bfere table will load to GUI
     await page.waitForSelector('tr td:first-child'); 
     // collecting 1st column to array
+    await expect(page.locator('tr td:first-child').first()).toBeVisible();
     const activityTexts = await page.locator('tr td:first-child').allTextContents();
     let foundDecription = false;
     activityTexts.forEach((text) => {
