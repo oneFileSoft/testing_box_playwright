@@ -131,8 +131,6 @@ test('Api test --- Post - INSERT - invalid amount', async ({ request }, testInfo
 });
 
 
-
-
 //res.status(200).json({ success: true, message: "User expenses include " + transDescr + " for the amount + " + transTotal + " inserted successfully!"
 test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ page, request }) => {
   let generatedId = 0;
@@ -192,15 +190,14 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
     expect(expenceFound).toBe(true);
   });
 
-  await test.step("step#3: Verification of new activities appearence from GIU", async() => {
+  await test.step("step#3: Verification of new activities appearence from GIU", async () => {
     await page.getByRole('img', { name: 'User-DB' }).click();
     await page.locator('#uname').fill('John');
     await page.locator('#passw').fill('John');
     await page.getByRole('button', { name: 'Authenticate' }).click();
     await page.waitForLoadState('domcontentloaded');
-    // very important to wait bfere table will load to GUI
     await page.waitForSelector('tr td:first-child'); 
-    
+  
     await expect(page.locator('tr td:first-child').first()).toBeVisible();
 
     const rows = page.locator('tbody tr');
@@ -209,30 +206,47 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
     const row = rows.nth(0);
     const descr = await row.locator('td').nth(0).innerText();
     const descr1 = await row.locator('td').nth(1).innerText();
-    console.log("-----1st row: "+ descr+" "+descr1);
+    // console.log("-----1st row: " + descr + " " + descr1);
+    // ///////  just another way to browse trough table:
+    // //////////////////////    collecting 1st column to array   /////////////////////
+    // const activityTexts = await page.locator('tr td:first-child').allTextContents();
+    // let foundDecription = false;
+    // activityTexts.forEach((text) => {
+    //   if (text === transDecr) { 
+    //     foundDecription = true;
+    //   }
+    // });
+    // if (! foundDecription) {
+    //   for (let i = 0; i < activityTexts.length; i++) {
+    //     if (activityTexts[i]  === transDecr) {
+    //       foundDecription = true;
+    //       break;
+    //     }
+    //   }
+    // }
 
-    //////////////////////    collecting 1st column to array   /////////////////////
-    const activityTexts = await page.locator('tr td:first-child').allTextContents();
+  
+    // Robust wait-for-text block
     let foundDecription = false;
-    activityTexts.forEach((text) => {
-      // await expect(page.locator(`tr td:first-child`, { hasText: transDecr })).toBeVisible({ timeout: 5000 });
-
-      if (text === transDecr) { 
-        console.log("---------------------------------");
+    const timeout = 5000; // ms
+    const interval = 250; // ms
+    const maxTries = timeout / interval;
+    let tries = 0;
+  
+    while (!foundDecription && tries < maxTries) {
+      const activityTexts = await page.locator('tr td:first-child').allTextContents();
+      if (activityTexts.includes(transDecr)) {
+        console.log("✅ Found inserted description: " + transDecr);
         foundDecription = true;
+        break;
       }
-    });
-    if (! foundDecription) {
-      for (let i = 0; i < activityTexts.length; i++) {
-        if (activityTexts[i]  === transDecr) {
-          foundDecription = true;
-          break;
-        }
-      }
+      await page.waitForTimeout(interval);
+      tries++;
     }
-    expect (foundDecription).toBe(true);
+  
+    expect(foundDecription).toBe(true);
     await page.getByRole('img', { name: 'Home' }).click();
-  });
+  });  
 
   await test.step("step#4: Delete this activities from GIU (by: userId + id)", async() => {
     await page.getByRole('img', { name: 'User-DB' }).click();
