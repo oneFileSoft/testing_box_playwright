@@ -42,13 +42,21 @@ async function getComputedStyleProperty(page, locator, property) {
     return await page.evaluate(({ el, prop }) => {
       return getComputedStyle(el)[prop];
     }, { el: elementHandle, prop: property });
-  }
+}
 
+async function getTextFromToast(page) {
+    await page.waitForLoadState('domcontentloaded');
+    const toastBox = page.locator(".Toastify__toast").first();
+    await toastBox.waitFor(); // Ensures it's visible before extracting text
+    const messageText = await toastBox.textContent();
+    return messageText;
+}
   export default {
     extractBetween,
     getSessionStorage,
     getLocalStorage,
     getRandomInt,
-    getComputedStyleProperty
+    getComputedStyleProperty,
+    getTextFromToast
   };
   

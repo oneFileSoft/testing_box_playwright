@@ -11,7 +11,7 @@ test('Regression Report counter and comparing repor Date', async ({ page }) => {
   await page.getByRole('img', { name: 'RegrReport' }).click();
   await page.waitForLoadState('networkidle'); 
   const count = await page.locator('a').count();
-  expect (count > 1);
+  expect (count > 1).toBeTruthy();
   const dateInput = page.locator('input[type="date"]');
   const dateFromCalendar = await dateInput.inputValue();
   console.log("Date from calendar: " + dateFromCalendar);
@@ -25,7 +25,7 @@ test('Regression Report counter and comparing repor Date', async ({ page }) => {
   // const dateFromReport1 = new Date(dateFromReport);
   const dateFromReport1 = new Date();
   const date2 = format(dateFromReport1, 'yyyy-MM-dd');
-  expect (date1 == date2)
+  expect (date1).toBe(date2);
 });
 
 

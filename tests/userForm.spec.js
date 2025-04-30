@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import utils from './utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -7,37 +8,37 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('negative - User obey 25 characters lenght', async ({ page }) => {
-  await page.getByRole('img', { name: 'DB' }).click();
+  await page.getByRole('img', { name: 'User-DB' }).click();
   await page.locator('#uname').fill('asdfghjklqwertyuiop01234567890');
   await page.locator('#passw').fill('test');
   const fieldText = await page.locator('#uname').inputValue();
-  expect (fieldText === "asdfghjklqwertyuiop012345"); 
+  expect (fieldText).toBe("asdfghjklqwertyuiop012345"); 
 });
 
 test('Wrong User name', async ({ page }) => {
-  await page.getByRole('img', { name: 'DB' }).click();
+  await page.getByRole('img', { name: 'User-DB' }).click();
   await page.locator('#uname').fill('test1');
   await page.locator('#passw').fill('test');
   await page.getByRole('button', { name: 'Authenticate' }).click();
   
-  const messageText = await getTextFromToast(page);
+  const messageText = await utils.getTextFromToast(page);
   expect (messageText).toContain("Error during login: Invalid username or password");
   expect (await page.getByRole('textbox', { name: 'Description' })).toBeHidden();
 });
 
 test('Wrong password', async ({ page }) => {
-  await page.getByRole('img', { name: 'DB' }).click();
+  await page.getByRole('img', { name: 'User-DB' }).click();
   await page.locator('#uname').fill('test');
   await page.locator('#passw').fill('test1');
   await page.getByRole('button', { name: 'Authenticate' }).click();
 
-  const messageText = await getTextFromToast(page);
+  const messageText = await utils.getTextFromToast(page);
   expect (messageText).toContain("Error during login: Invalid username or password");  
   expect (await page.getByRole('textbox', { name: 'Description' })).toBeHidden();
 });
 
 test('Authenticate existing User', async ({ page }) => {
-  await page.getByRole('img', { name: 'DB' }).click();
+  await page.getByRole('img', { name: 'User-DB' }).click();
   await page.getByRole('textbox', { name: 'Your User Name' }).fill('test');
   await page.getByRole('textbox', { name: 'Your User Name' }).press('Tab');
   await page.getByRole('textbox', { name: 'Your Password' }).fill('test');
@@ -52,7 +53,6 @@ test('Authenticate existing User', async ({ page }) => {
   expect (await page.locator('input[type="date"]')).toBeVisible();
   //following, because they have unique type - easy to capture by locator
   // expect (await page.locator('input[type="date"]').isVisible()).toBeTruthy();
-  
   expect (await page.getByRole('heading', { name: 'Add Expense for test' })).toBeVisible(); 
 });
 
@@ -90,7 +90,7 @@ test('Api test --- GET', async ({ request }, testInfo) => {
       break;
     }
   }    
-  expect(descriptionFound); 
+  expect(descriptionFound).toBeTruthy(); 
 });
 
 //res.status(404).json({ success: false, message: "User not found" })
@@ -104,7 +104,10 @@ test('Api test --- Post - INSERT - no User found', async ({ request }) => {
     }
   });
   expect (response.status()).toBe(404);
-  expect (response.message == "User not found")
+  const body = await response.json();// Parse JSON body from response
+  expect (body.success).toBe(false);  // Assert on the body
+  expect (body.message).toBe("User not found");
+
 });
 
 //res.status(500).json({ success: false, message: "Error inserting user expences to DB", error: error.message });
@@ -118,7 +121,9 @@ test('Api test --- Post - INSERT - invalid amount', async ({ request }, testInfo
     }
   });
   expect (response.status()).toBe(500);
-  expect (response.message == "Error inserting user expences to DB");
+  const body = await response.json();// Parse JSON body from response
+  expect (body.success).toBe(false);  // Assert on the body
+  expect (body.message).toBe("Error inserting user expences to DB");
 });
 
 
@@ -127,7 +132,7 @@ test('Api test --- Post - INSERT - invalid amount', async ({ request }, testInfo
 //res.status(200).json({ success: true, message: "User expenses include " + transDescr + " for the amount + " + transTotal + " inserted successfully!"
 test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ page, request }) => {
   let generatedId = 0;
-  const myNumb = parseFloat(`${getRandomInt()}.${getRandomInt()}`);
+  const myNumb = parseFloat(`${utils.getRandomInt()}.${utils.getRandomInt()}`);
   const transDecr = "Test from Playwright " + myNumb;
   
   await test.step("step#1: INSERT new activities by API", async() => {
@@ -141,11 +146,10 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
       }
     });
     expect (response.status()).toBe(200);
-    expect (response.message == "User expenses include " + transDecr + " for the amount + " + myNumb + " inserted successfully!");
     const body = await response.json();// Parse JSON body from response
     expect (body.success).toBe(true);  // Assert on the body
-    expect (body.message == "User expenses include " + transDecr + " for the amount + " + myNumb + " inserted successfully!");
-    generatedId =  body.insertedId; // ✅ This is where the ID lives
+    expect (body.message).toBe("User expenses include " + transDecr + " for the amount + " + myNumb + " inserted successfully!");
+    generatedId = body.insertedId; // ✅ This is where the ID lives
   });
 
   await test.step("step#2: Checking inserted activities available with GET-API (with 3 loops)", async() => {
@@ -163,7 +167,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
         break;
       }
     }    
-    expect(expenceFound).toBeTruthy();
+    expect(expenceFound).toBe(true);
     
     //loop#2
     expenceFound = false;
@@ -172,7 +176,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
         expenceFound = true;
       }
     });
-    expect(expenceFound)
+    expect(expenceFound).toBe(true);
 
     //loop#3
     for (let i = 0; i < body.expenses.length; i++) {
@@ -181,11 +185,11 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
         break;
       }
     }
-    expect(expenceFound)
+    expect(expenceFound).toBe(true);
   });
 
   await test.step("step#3: Verification of new activities appearence from GIU", async() => {
-    await page.getByRole('img', { name: 'DB' }).click();
+    await page.getByRole('img', { name: 'User-DB' }).click();
     await page.locator('#uname').fill('John');
     await page.locator('#passw').fill('John');
     await page.getByRole('button', { name: 'Authenticate' }).click();
@@ -198,12 +202,12 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
     activityTexts.forEach((text) => {
       if (text === transDecr) foundDecription = true;
     });
-    expect (foundDecription);
+    expect (foundDecription).toBe(true);
     await page.getByRole('img', { name: 'Home' }).click();
   });
 
   await test.step("step#4: Delete this activities from GIU (by: userId + id)", async() => {
-    await page.getByRole('img', { name: 'DB' }).click();
+    await page.getByRole('img', { name: 'User-DB' }).click();
     await page.locator('#uname').fill('John');
     await page.locator('#passw').fill('John');
     await page.getByRole('button', { name: 'Authenticate' }).click();
@@ -223,7 +227,9 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
         page.once('dialog', dialog => {
           dialog.dismiss().catch(() => {});
         });
-        await row.locator('td').nth(3).getByRole('button', { name: /delete/i }).click();
+        // await row.locator('td').nth(3).getByRole('button', { name: /delete/i }).click();
+        // await page.getByRole('row', { name: 'Test from Playwright 35.19 35' }).getByRole('button').click();
+        await page.locator('tr').filter({ hasText: transDecr }).locator('button').click();
         break;
       }
     }
@@ -231,7 +237,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
   }); 
  
   await test.step("step#5: Verification of new activities is GONE from GIU!", async() => {
-    await page.getByRole('img', { name: 'DB' }).click();
+    await page.getByRole('img', { name: 'User-DB' }).click();
     await page.locator('#uname').fill('John');
     await page.locator('#passw').fill('John');
     await page.getByRole('button', { name: 'Authenticate' }).click();
@@ -244,7 +250,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
     activityTexts.forEach((text) => {
       if (text === transDecr) foundDecription = true;
     });
-    expect (foundDecription).toBeFalsy;
+    expect (foundDecription).toBe(false);
     await page.getByRole('img', { name: 'Home' }).click();
   });
 
@@ -263,7 +269,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
         break;
       }
     }    
-    expect(expenceFound).toBeFalsy  
+    expect(expenceFound).toBe(false); 
   });
 
   console.log("API Insert-Get-Delete end-to-end test (Delete by GUI) is done!")
@@ -271,7 +277,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
 
 test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by API', async ({ page, request }) => {
   let generatedId = 0;
-  const myNumb = parseFloat(`${getRandomInt()}.${getRandomInt()}`);
+  const myNumb = parseFloat(`${utils.getRandomInt()}.${utils.getRandomInt()}`);
   const transDecr = "Test from Playwright " + myNumb;
   
   await test.step("step#1: INSERT new activities by API", async() => {
@@ -285,11 +291,10 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by API', async ({ pa
       }
     });
     expect (response.status()).toBe(200);
-    expect (response.message == "User expenses include " + transDecr + " for the amount + " + myNumb + " inserted successfully!");
     const body = await response.json();// Parse JSON body from response
     expect (body.success).toBe(true);  // Assert on the body
-    expect (body.message == "User expenses include " + transDecr + " for the amount + " + myNumb + " inserted successfully!");
-    generatedId =  body.insertedId; // ✅ This is where the ID lives
+    expect (body.message).toBe("User expenses include " + transDecr + " for the amount + " + myNumb + " inserted successfully!");
+    generatedId = body.insertedId; // ✅ This is where the ID lives
   });
 
   await test.step("step#2: Checking inserted activities available with GET-API", async() => {
@@ -306,7 +311,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by API', async ({ pa
         break;
       }
     }    
-    expect(expenceFound);
+    expect(expenceFound).toBe(true);
   });
 
   await test.step("step#3: Delete this activities from by API (by: userId + transDescr)", async() => {
@@ -321,7 +326,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by API', async ({ pa
   
     expect(response.status()).toBe(200);
     expect(respBody.success).toBe(true);
-    expect(respBody.message === "Expense deleted successfully");
+    expect(respBody.message).toBe("Expense deleted successfully");
   }); 
  
   await test.step("step#4: Verification of new activities is GONE by API-Get", async() => {
@@ -337,21 +342,8 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by API', async ({ pa
         break;
       }
     }    
-    expect(!expenceFound);  
+    expect(expenceFound).toBe(false);  
   });
 
   console.log("API Insert-Get-Delete end-to-end test (Delete by API) is done!")
 });
-
-
-function getRandomInt() {
-  return Math.floor(Math.random() * 100) + 10;
-}
-
-async function getTextFromToast(page) {
-  await page.waitForLoadState('domcontentloaded');
-  const toastBox = page.locator(".Toastify__toast").first();
-  await toastBox.waitFor(); // Ensures it's visible before extracting text
-  const messageText = await toastBox.textContent();
-  return messageText;
-}

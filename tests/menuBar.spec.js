@@ -34,10 +34,3 @@ test('navigation throught menu Bar', async ({ page }) => {
     expect (await page.getByRole('heading', { name: 'Contact Us' })).toBeVisible();
     expect (await page.getByText("Submit")).toBeVisible();
   });
-
-  
-  // await page.goto('/');
-  // await page.getByRole('img', { name: 'About Us' }).click();
-  // expect (await page.getByText("CI / CD workflow").isVisible());
-  // await page.getByRole('button', { name: 'Contact Us' }).click();
-  // expect (await page.getByText("CI / CD workflow").isVisible()).toBeFalsy;
