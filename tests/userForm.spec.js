@@ -216,7 +216,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
     await page.waitForSelector('tr td:first-child'); 
     const rows = page.locator('tbody tr');
     const rowCount = await rows.count();
-  
+    console.log(" total number of records before I clicked on Delete button: " + rowCount);
     for (let i = 0; i < rowCount; i++) {
       const row = rows.nth(i);
       const descr = await row.locator('td').nth(0).innerText(); // first column (Description)
@@ -225,11 +225,15 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
       if (descr === transDecr) {
         // Click the delete button inside this row (assuming it's in the 4th <td>)
         page.once('dialog', dialog => {
-          dialog.dismiss().catch(() => {});
+          // dialog.dismiss().catch(() => {});
+          dialog.accept().catch(() => {});
         });
         // await row.locator('td').nth(3).getByRole('button', { name: /delete/i }).click();
         // await page.getByRole('row', { name: 'Test from Playwright 35.19 35' }).getByRole('button').click();
-        await page.locator('tr').filter({ hasText: transDecr }).locator('button').click();
+        // await page.locator('tr').filter({ hasText: transDecr }).locator('button').click();
+        // await page.locator('tr:has-text("Test from Playwright 35.19")').locator('button').click();
+        console.log("in the loop of rows, found match of descriptions: " + transDecr);
+        await page.locator(`tr:has-text("${transDecr}")`).locator('button').click();
         break;
       }
     }
@@ -261,7 +265,6 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
     const body = await resp.json();
     // example of JSON:  body.expenses[0].userId, body.expenses[0].transDescr
     
-    //loop#1
     let expenceFound = false;
     for (const expenseItem of body.expenses) {
       if (expenseItem.id == generatedId && expenseItem.transDescr === transDecr) {
@@ -302,8 +305,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by API', async ({ pa
     const resp = await request.get(endpoint); 
     expect (resp.status()).toBe(200);
     const body = await resp.json();
-    // example of JSON:  body.expenses[0].userId, body.expenses[0].transDescr
-    
+    // example of JSON:  body.expenses[0].userId, body.expenses[0].transDescr......
     let expenceFound = false;
     for (const expenseItem of body.expenses) {
       if (expenseItem.id == generatedId && expenseItem.transDescr === transDecr) {
