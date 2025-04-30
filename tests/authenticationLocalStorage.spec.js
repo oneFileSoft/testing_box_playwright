@@ -72,8 +72,6 @@ test('Wrong Password', async ({ page }) => {
   const data = await utils.getSessionStorage(page);
   expect (data.credentials !== undefined).toBeTruthy();
   expect (data.credentials).toBe("wrong password.");
-  const tst =  await utils.getComputedStyleProperty(page, page.getByText('Error login'), 'text');
-console.log("ttt "+tst);
 });
 
 
