@@ -68,10 +68,12 @@ test('Wrong Password', async ({ page }) => {
   expect (err).toBe("Error login");
   const colorOfTheMessage =  await utils.getComputedStyleProperty(page, page.getByText('Error login'), 'color');
   console.log(colorOfTheMessage);
-  expect(colorOfTheMessage).toBe("rgb(255, 0, 0)"); // red
+  expect(colorOfTheMessage).toBe("rgb(255, 0, 0)"); // means red
   const data = await utils.getSessionStorage(page);
   expect (data.credentials !== undefined).toBeTruthy();
   expect (data.credentials).toBe("wrong password.");
+  const tst =  await utils.getComputedStyleProperty(page, page.getByText('Error login'), 'text');
+console.log("ttt "+tst);
 });
 
 

@@ -35,6 +35,8 @@ test('Wrong password', async ({ page }) => {
   const messageText = await utils.getTextFromToast(page);
   expect (messageText).toContain("Error during login: Invalid username or password");  
   expect (await page.getByRole('textbox', { name: 'Description' })).toBeHidden();
+  const data = await utils.getSessionStorage(page);
+  expect (data.user).toBeUndefined();
 });
 
 test('Authenticate existing User', async ({ page }) => {
@@ -54,6 +56,8 @@ test('Authenticate existing User', async ({ page }) => {
   //following, because they have unique type - easy to capture by locator
   // expect (await page.locator('input[type="date"]').isVisible()).toBeTruthy();
   expect (await page.getByRole('heading', { name: 'Add Expense for test' })).toBeVisible(); 
+  const data = await utils.getSessionStorage(page);
+  expect (data.user).toContain("test__");
 });
 
 /******************************************************/
