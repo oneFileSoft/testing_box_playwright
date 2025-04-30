@@ -200,8 +200,18 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
     await page.waitForLoadState('domcontentloaded');
     // very important to wait bfere table will load to GUI
     await page.waitForSelector('tr td:first-child'); 
-    // collecting 1st column to array
+    
     await expect(page.locator('tr td:first-child').first()).toBeVisible();
+
+    const rows = page.locator('tbody tr');
+    const rowCount = await rows.count();
+    console.log(" total number of records before I delete on Delete button: " + rowCount);
+    const row = rows.nth(0);
+    const descr = await row.locator('td').nth(0).innerText();
+    const descr1 = await row.locator('td').nth(1).innerText();
+    console.log("-----1st row: "+ descr+" "+descr1);
+
+    //////////////////////    collecting 1st column to array   /////////////////////
     const activityTexts = await page.locator('tr td:first-child').allTextContents();
     let foundDecription = false;
     activityTexts.forEach((text) => {
