@@ -1,14 +1,14 @@
 import { test, expect } from '@playwright/test';
+import utils from './utils.js';
+
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
-  console.log(' ***********************    Current URL: ', page.url());
   await page.waitForLoadState();
+  await page.getByRole('img', { name: 'Contact' }).click();
 });
 
 test('Prevention of Submit of Email, with all empty fields', async ({ page }) => {
-    await page.getByRole('img', { name: 'Contact' }).click();
-
     expect (await page.locator('input[name="firstName"]').inputValue()).toBe('');
 
     await page.locator('input[name="firstName"]').click();
@@ -26,8 +26,6 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
   });
 
   test('Empty FirstName, lastName and message lost fokus', async ({ page }) => {
-    await page.getByRole('img', { name: 'Contact' }).click();
-
     await page.locator('input[name="firstName"]').click();
     await page.locator('input[name="lastName"]').click();
 
@@ -46,8 +44,6 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
   });
 
   test('Only message is empty', async ({ page }) => {
-    await page.getByRole('img', { name: 'Contact' }).click();
-
     await page.locator('input[name="firstName"]').fill("John");
     await page.locator('input[name="lastName"]').fill("Smith");
     await page.locator('input[name="yourWebsite"]').fill("www.myWebsite.com");
@@ -61,19 +57,14 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
     expect (await page.getByText('Please, fill out all required')).toBeHidden()
   });
 
-  function getRandomInt() {
-    return Math.floor(Math.random() * 100) + 10;
-  }
-
   test('Successfull Email send', async ({ page }) => {
-    await page.getByRole('img', { name: 'Contact' }).click();
-    const fName = "J" + getRandomInt() + "J";
+    const fName = "J" + utils.getRandomInt() + "J";
     await page.locator('input[name="firstName"]').fill(fName);
-    const lName = "S" + getRandomInt() + "S"
+    const lName = "S" + utils.getRandomInt() + "S"
     await page.locator('input[name="lastName"]').fill(lName);
-    const webSite = "www.abc" + getRandomInt() + ".com"
+    const webSite = "www.abc" + utils.getRandomInt() + ".com"
     await page.locator('input[name="yourWebsite"]').fill(webSite);
-    const email = "abc" + getRandomInt() + "@yahoo.com"
+    const email = "abc" + utils.getRandomInt() + "@yahoo.com"
     await page.locator('input[name="yourEmail"]').fill(email);
     await page.locator('textarea[name="message"]').fill("Test Email: " + fName + " " + lName);
 

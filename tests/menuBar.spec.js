@@ -19,12 +19,12 @@ test('navigation throught menu Bar', async ({ page }) => {
     expect (await page.getByRole('heading', { name: 'Contact Us' })).toBeVisible();
     expect (await page.getByRole('button', { name: 'Submit' })).toBeVisible();
 
-    await page.getByRole('img', { name: 'DB' }).click();
+    await page.getByRole('img', { name: 'User-DB' }).click();
     expect (await page.getByRole('heading', { name: 'Login or insert new User' })).toBeVisible();
     expect (await page.getByRole('button', { name: 'Authenticate' })).toBeVisible();
 
 
-    await page.getByRole('img', { name: 'CI' }).click();
+    await page.getByRole('img', { name: 'About Jenkins' }).click();
     expect (await page.getByRole('heading', { name: 'Jenkins controller' })).toBeVisible();
     expect (await page.getByRole('heading', { name: 'Web site' })).toBeVisible();
     expect (await page.getByRole('heading', { name: 'Regression' })).toBeVisible();
