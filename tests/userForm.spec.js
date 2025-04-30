@@ -204,7 +204,10 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
     const activityTexts = await page.locator('tr td:first-child').allTextContents();
     let foundDecription = false;
     activityTexts.forEach((text) => {
-      if (text === transDecr) foundDecription = true;
+      if (text === transDecr) { 
+        console.log("---------------------------------");
+        foundDecription = true;
+      }
     });
     expect (foundDecription).toBe(true);
     await page.getByRole('img', { name: 'Home' }).click();
