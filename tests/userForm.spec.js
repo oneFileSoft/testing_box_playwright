@@ -204,11 +204,21 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
     const activityTexts = await page.locator('tr td:first-child').allTextContents();
     let foundDecription = false;
     activityTexts.forEach((text) => {
+      // await expect(page.locator(`tr td:first-child`, { hasText: transDecr })).toBeVisible({ timeout: 5000 });
+
       if (text === transDecr) { 
         console.log("---------------------------------");
         foundDecription = true;
       }
     });
+    if (! foundDecription) {
+      for (let i = 0; i < activityTexts.length; i++) {
+        if (activityTexts[i]  === transDecr) {
+          foundDecription = true;
+          break;
+        }
+      }
+    }
     expect (foundDecription).toBe(true);
     await page.getByRole('img', { name: 'Home' }).click();
   });
