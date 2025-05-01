@@ -25,7 +25,7 @@ test('Regression Report counter and comparing repor Date', async ({ page }) => {
   // const dateFromReport1 = new Date(dateFromReport);
   const dateFromReport1 = new Date();
   const date2 = format(dateFromReport1, 'yyyy-MM-dd');
-  expect (date1).toBe(date2);
+  expect (date1).toBe(date2)
 });
 
 
