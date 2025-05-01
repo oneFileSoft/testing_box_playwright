@@ -276,6 +276,11 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
     console.log("Step#3 - loggin into the system with John credentials to see added record");
     await page.getByRole('img', { name: 'User-DB' }).click();
     await page.getByRole('img', { name: 'Home' }).click();
+    await page.evaluate(() => {
+      if (typeof window.loadTable === 'function') {
+        window.loadTable();
+      }
+    });
     await page.waitForLoadState('networkidle'); // allow pending requests to settle
     await page.reload();
     await page.getByRole('img', { name: 'User-DB' }).click();
