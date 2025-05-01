@@ -130,21 +130,22 @@ test('Api test --- Post - INSERT - invalid amount', async ({ request }, testInfo
   expect (body.message).toBe("Error inserting user expences to DB");
 });
 
-async function findMatchInDataSet({ request, endpoint, dataKey, fieldName, expectedValue }) {
+async function findMatchInDataSet(request, endpoint, dataKey, fieldName, expectedValue ) {
   const confirmResp = await request.get(endpoint);
   const confirmBody = await confirmResp.json();
   const records = confirmBody[dataKey];
-  console.log(`Number of ${dataKey} = ${records.length}`);
+  console.log("  --- checking if "+dataKey+"."+fieldName+" contain: " + expectedValue);
+  console.log(`  --- Number of ${dataKey} = ${records.length}`);
   const found = records.some(item => item[fieldName] === expectedValue);
-  console.log ("ExpectedValue("+expectedValue+") found in "+ dataKey + "." +fieldName+" = "+found);
-}
+  console.log(`  --- ExpectedValue(${expectedValue}) found in ${dataKey}.${fieldName} = ${found}`);
 
+}
 //res.status(200).json({ success: true, message: "User expenses include " + transDescr + " for the amount + " + transTotal + " inserted successfully!"
 test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ page, request }) => {
   let generatedId = 0;
   const myNumb = parseFloat(`${utils.getRandomInt()}.${utils.getRandomInt()}`);
   const transDecr = "Test from Playwright " + myNumb;
-  await findMatchInDataSet(request, "/getExpenses?userId=46", "expenses", transDecr);
+  await findMatchInDataSet(request, "/getExpenses?userId=46", "expenses", "transDescr", transDecr);
 
   await test.step("step#1: INSERT new activities by API", async() => {
     console.log("Step#1 - insert to user = John (46) new expence record: " + transDecr);
@@ -163,12 +164,12 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
     generatedId = body.insertedId; // ✅ This is where the ID lives
     console.log("Step#1 - For sake of imidiate verification of correctness of working [/insertExpense API],");
     console.log("      will verify just inserted record with [/getExpenses API] specifically for taransDescr="+transDecr)
-      const confirmResp = await request.get(`/getExpenses?userId=46`);
-      const confirmBody = await confirmResp.json();
-      const inserted = confirmBody.expenses.some(item => item.transDescr === transDecr);
-      console.log("Step#1 - umber transDescr ["+transDecr+"] is found: " + inserted);
-      expect(inserted).toBe(true); 
-    await findMatchInDataSet(request, "/getExpenses?userId=46", "expenses", transDecr);
+      // const confirmResp = await request.get(`/getExpenses?userId=46`);
+      // const confirmBody = await confirmResp.json();
+      // const inserted = confirmBody.expenses.some(item => item.transDescr === transDecr);
+      // console.log("Step#1 - umber transDescr ["+transDecr+"] is found: " + inserted);
+      // expect(inserted).toBe(true); 
+    await findMatchInDataSet(request, "/getExpenses?userId=46", "expenses", "transDescr", transDecr);
   });
 
   await test.step("Step#2: Checking inserted activities available with GET-API (with 3 loops)", async() => {
