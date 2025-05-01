@@ -132,7 +132,7 @@ test('Api test --- Post - INSERT - invalid amount', async ({ request }, testInfo
 
 
 //res.status(200).json({ success: true, message: "User expenses include " + transDescr + " for the amount + " + transTotal + " inserted successfully!"
-test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ page, request }) => {
+test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ page, request }) => {
   let generatedId = 0;
   const myNumb = parseFloat(`${utils.getRandomInt()}.${utils.getRandomInt()}`);
   const transDecr = "Test from Playwright " + myNumb;
@@ -249,12 +249,9 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
         foundDecription = true;
         break;
       }
-
       await page.waitForTimeout(interval);
       tries++;
     }
-    
-  
     expect(foundDecription).toBe(true);
     await page.getByRole('img', { name: 'Home' }).click();
   });  
