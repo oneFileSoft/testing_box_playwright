@@ -260,6 +260,10 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
   await test.step("step#3: Verification of new activities appearance from GUI", async () => {
     console.log("Step#3 - loggin into the system with John credentials to see added record");
     await page.getByRole('img', { name: 'User-DB' }).click();
+    await page.getByRole('img', { name: 'Home' }).click();
+    await page.waitForLoadState('networkidle'); // allow pending requests to settle
+    await page.reload();
+    await page.getByRole('img', { name: 'User-DB' }).click();
     await page.locator('#uname').fill('John');
     await page.locator('#passw').fill('John');
   
