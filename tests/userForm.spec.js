@@ -138,6 +138,9 @@ async function findMatchInDataSet(request, endpoint, dataKey, fieldName, expecte
   console.log(`  --- Number of ${dataKey} = ${records.length}`);
   const found = records.some(item => item[fieldName] === expectedValue);
   console.log(`  --- ExpectedValue(${expectedValue}) found in ${dataKey}.${fieldName} = ${found}`);
+  for(let i=0; i < records.length; i++) {
+    console.log("#"+i+" " +fieldName +" "+ records[i][fieldName]);
+  }
 
 }
 //res.status(200).json({ success: true, message: "User expenses include " + transDescr + " for the amount + " + transTotal + " inserted successfully!"
