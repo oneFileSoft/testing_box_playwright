@@ -275,8 +275,8 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
       if (descr === transDecr) {
         // Click the delete button inside this row (assuming it's in the 4th <td>)
         page.once('dialog', dialog => {
-          // dialog.dismiss().catch(() => {});
-          dialog.accept().catch(() => {});
+          //        OK                           Cancel
+          dialog.accept().catch(() => {});// dialog.dismiss().catch(() => {});
         });
         // await row.locator('td').nth(3).getByRole('button', { name: /delete/i }).click();
         // await page.getByRole('row', { name: 'Test from Playwright 35.19 35' }).getByRole('button').click();
