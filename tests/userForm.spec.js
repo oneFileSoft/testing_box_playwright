@@ -139,7 +139,7 @@ async function findMatchInDataSet(request, endpoint, dataKey, fieldName, expecte
   const found = records.some(item => item[fieldName] === expectedValue);
   console.log(`  --- ExpectedValue(${expectedValue}) found in ${dataKey}.${fieldName} = ${found}`);
   for(let i=0; i < records.length; i++) {
-    console.log("#"+i+" " +fieldName +" "+ records[i][fieldName]);
+    console.log("#"+i+" " +fieldName +": "+ records[i][fieldName]);
   }
 
 }
