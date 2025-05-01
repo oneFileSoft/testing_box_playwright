@@ -152,11 +152,13 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
     expect (body.success).toBe(true);  // Assert on the body
     expect (body.message).toBe("User expenses include " + transDecr + " for the amount + " + myNumb + " inserted successfully!");
     generatedId = body.insertedId; // ✅ This is where the ID lives
-
-    const confirmResp = await request.get(`/getExpenses?userId=46`);
-    const confirmBody = await confirmResp.json();
-    const inserted = confirmBody.expenses.some(item => item.transDescr === transDecr);
-    expect(inserted).toBe(true); 
+    console.log("For sake of imidiate verification of correctness of working [/insertExpense API],");
+    console.log("will verify just inserted record with [/getExpenses API] specifically for taransDescr="+transDecr)
+      const confirmResp = await request.get(`/getExpenses?userId=46`);
+      const confirmBody = await confirmResp.json();
+      const inserted = confirmBody.expenses.some(item => item.transDescr === transDecr);
+      console.log("transDescr="+transDecr+" is found: " + inserted);
+      expect(inserted).toBe(true); 
   });
 
   await test.step("step#2: Checking inserted activities available with GET-API (with 3 loops)", async() => {
@@ -247,7 +249,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) from GIU', async ({ 
         foundDecription = true;
         break;
       }
-    
+
       await page.waitForTimeout(interval);
       tries++;
     }
