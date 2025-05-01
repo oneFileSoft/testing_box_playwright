@@ -76,7 +76,8 @@ import { defineConfig } from '@playwright/test';
       baseURL: process.env.BASE_URL || 'https://testingbox.pw',
     },
     testDir: "tests/",
-    reporter: [ ['html', { outputFolder: 'playwright-report' }],
+    reporter: [ 
+                ['html', { outputFolder: 'playwright-report', attachments: false }]
                 ['junit', { outputFile: 'test-results/junit.xml' }]
     ],           
   timeout: 30000, //global timeout for running tests... if it runs more - fail the test
