@@ -136,9 +136,8 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
   let generatedId = 0;
   const myNumb = parseFloat(`${utils.getRandomInt()}.${utils.getRandomInt()}`);
   const transDecr = "Test from Playwright " + myNumb;
-  
   await test.step("step#1: INSERT new activities by API", async() => {
-    console.log("decimal number using in test = " + myNumb);
+    console.log("Step#1 - insert to user = John (46) new expence record: " + transDecr);
     const response = await request.post('/insertExpense', {
       data: {
         userId: '46',
@@ -152,23 +151,23 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
     expect (body.success).toBe(true);  // Assert on the body
     expect (body.message).toBe("User expenses include " + transDecr + " for the amount + " + myNumb + " inserted successfully!");
     generatedId = body.insertedId; // ✅ This is where the ID lives
-    console.log("For sake of imidiate verification of correctness of working [/insertExpense API],");
-    console.log("will verify just inserted record with [/getExpenses API] specifically for taransDescr="+transDecr)
+    console.log("Step#1 - For sake of imidiate verification of correctness of working [/insertExpense API],");
+    console.log("      will verify just inserted record with [/getExpenses API] specifically for taransDescr="+transDecr)
       const confirmResp = await request.get(`/getExpenses?userId=46`);
       const confirmBody = await confirmResp.json();
       const inserted = confirmBody.expenses.some(item => item.transDescr === transDecr);
-      console.log("transDescr="+transDecr+" is found: " + inserted);
+      console.log("Step#1 - transDescr ["+transDecr+"] is found: " + inserted);
       expect(inserted).toBe(true); 
   });
 
-  await test.step("step#2: Checking inserted activities available with GET-API (with 3 loops)", async() => {
+  await test.step("Step#2: Checking inserted activities available with GET-API (with 3 loops)", async() => {
     const endpoint = "/getExpenses?userId=46";
     const resp = await request.get(endpoint); 
     expect (resp.status()).toBe(200);
     const body = await resp.json();
     // example of JSON:  body.expenses[0].userId, body.expenses[0].transDescr
-    
-    //loop#1
+    console.log("Step#2 - for demo purpose, looking for generatedId and transDescr in 3 type of loops");
+    console.log("Step#2 - loop1:   for (const expenseItem of body.expenses) {...}");
     let expenceFound = false;
     for (const expenseItem of body.expenses) {
       if (expenseItem.id == generatedId && expenseItem.transDescr === transDecr) {
@@ -178,7 +177,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
     }    
     expect(expenceFound).toBe(true);
     
-    //loop#2
+    console.log("Step#2 - loop2: body.expenses.forEach(expenseData => {...}");
     expenceFound = false;
     body.expenses.forEach(expenseData => {
       if (expenseData.id == generatedId && expenseData.transDescr === transDecr) {
@@ -187,7 +186,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
     });
     expect(expenceFound).toBe(true);
 
-    //loop#3
+    console.log("Step#2 - loop3: for (let i = 0; i < body.expenses.length; i++) {...}");
     for (let i = 0; i < body.expenses.length; i++) {
       if (body.expenses[i].id == generatedId && body.expenses[i].transDescr === transDecr) {
         expenceFound = true;
@@ -195,67 +194,112 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
       }
     }
     expect(expenceFound).toBe(true);
+    console.log("Step#2 - exted expence is found = " + expenceFound);
   });
 
-  await test.step("step#3: Verification of new activities appearence from GIU", async () => {
+  // await test.step("step#3: Verification of new activities appearence from GIU", async () => {
+  //   console.log("Step#3 - loggin into the system with John credentials to see added record");
+  //   await page.getByRole('img', { name: 'User-DB' }).click();
+  //   await page.locator('#uname').fill('John');
+  //   await page.locator('#passw').fill('John');
+  //   await page.getByRole('button', { name: 'Authenticate' }).click();
+  //   await page.waitForLoadState('domcontentloaded');
+  //   await page.waitForSelector('tr td:first-child'); 
+  
+  //   await expect(page.locator('tr td:first-child').first()).toBeVisible();
+
+  //   const rows = page.locator('tbody tr');
+  //   const rowCount = await rows.count();
+  //   console.log("Step#3 - total number of records: " + rowCount);
+  //   const row = rows.nth(0);
+  //   const descr = await row.locator('td').nth(0).innerText();
+  //   const descr1 = await row.locator('td').nth(1).innerText();
+  //   console.log("Step#3 - -----1st row: " + descr + " " + descr1);
+  //   // ///////  just another way to browse trough table:
+  //   // //////////////////////    collecting 1st column to array   /////////////////////
+  //   // const activityTexts = await page.locator('tr td:first-child').allTextContents();
+  //   // let foundDecription = false;
+  //   // activityTexts.forEach((text) => {
+  //   //   if (text === transDecr) { 
+  //   //     foundDecription = true;
+  //   //   }
+  //   // });
+  //   // if (! foundDecription) {
+  //   //   for (let i = 0; i < activityTexts.length; i++) {
+  //   //     if (activityTexts[i]  === transDecr) {
+  //   //       foundDecription = true;
+  //   //       break;
+  //   //     }
+  //   //   }
+  //   // }
+
+  //   console.log("Step#3 - Robust wait-for-text block");
+  //   // Robust wait-for-text block
+  //   let foundDecription = false;
+  //   const timeout = 8000; // increase to 8s
+  //   const interval = 400; // slower polling
+  //   const maxTries = timeout / interval;
+  //   let tries = 0;
+    
+  //   while (!foundDecription && tries < maxTries) {
+  //     const activityTexts = await page.locator('tr td:first-child').allTextContents();
+  //     console.log(`[Try #${tries}] Found rows:`, activityTexts);
+    
+  //     if (activityTexts.includes(transDecr)) {
+  //       console.log("Strp#3 - In Loop: Found inserted description: " + transDecr);
+  //       foundDecription = true;
+  //       break;
+  //     }
+  //     await page.waitForTimeout(interval);
+  //     tries++;
+  //   }
+  //   console.log("Step#3 - After loop: Found inserted description: " + foundDecription);
+  //   expect(foundDecription).toBe(true);
+  //   await page.getByRole('img', { name: 'Home' }).click();
+  // });  
+  await test.step("step#3: Verification of new activities appearance from GUI", async () => {
+    console.log("Step#3 - loggin into the system with John credentials to see added record");
     await page.getByRole('img', { name: 'User-DB' }).click();
     await page.locator('#uname').fill('John');
     await page.locator('#passw').fill('John');
-    await page.getByRole('button', { name: 'Authenticate' }).click();
-    await page.waitForLoadState('domcontentloaded');
+  
+    console.log("Step#3 - block to wait with Promise.all");
+    await Promise.all([
+      page.waitForResponse(resp =>
+        resp.url().includes('/getExpenses') &&
+        resp.status() === 200
+      ),
+      page.getByRole('button', { name: 'Authenticate' }).click()
+    ]);
+  
     await page.waitForSelector('tr td:first-child'); 
-  
     await expect(page.locator('tr td:first-child').first()).toBeVisible();
-
-    const rows = page.locator('tbody tr');
-    const rowCount = await rows.count();
-    console.log(" total number of records before I delete on Delete button: " + rowCount);
-    const row = rows.nth(0);
-    const descr = await row.locator('td').nth(0).innerText();
-    const descr1 = await row.locator('td').nth(1).innerText();
-    // console.log("-----1st row: " + descr + " " + descr1);
-    // ///////  just another way to browse trough table:
-    // //////////////////////    collecting 1st column to array   /////////////////////
-    // const activityTexts = await page.locator('tr td:first-child').allTextContents();
-    // let foundDecription = false;
-    // activityTexts.forEach((text) => {
-    //   if (text === transDecr) { 
-    //     foundDecription = true;
-    //   }
-    // });
-    // if (! foundDecription) {
-    //   for (let i = 0; i < activityTexts.length; i++) {
-    //     if (activityTexts[i]  === transDecr) {
-    //       foundDecription = true;
-    //       break;
-    //     }
-    //   }
-    // }
-
   
-    // Robust wait-for-text block
+    console.log("Step#3 - Robust wait-for-text block");
     let foundDecription = false;
-    const timeout = 8000; // increase to 8s
-    const interval = 400; // slower polling
+    const timeout = 8000;
+    const interval = 400;
     const maxTries = timeout / interval;
     let tries = 0;
-    
+  
     while (!foundDecription && tries < maxTries) {
       const activityTexts = await page.locator('tr td:first-child').allTextContents();
       console.log(`[Try #${tries}] Found rows:`, activityTexts);
-    
+  
       if (activityTexts.includes(transDecr)) {
         console.log("✅ Found inserted description: " + transDecr);
         foundDecription = true;
         break;
       }
+  
       await page.waitForTimeout(interval);
       tries++;
     }
+    console.log("Step#3 - After loop: Found inserted description: " + foundDecription);
     expect(foundDecription).toBe(true);
     await page.getByRole('img', { name: 'Home' }).click();
-  });  
-
+  });
+  
   await test.step("step#4: Delete this activities from GIU (by: userId + id)", async() => {
     await page.getByRole('img', { name: 'User-DB' }).click();
     await page.locator('#uname').fill('John');
@@ -266,23 +310,25 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
     await page.waitForSelector('tr td:first-child'); 
     const rows = page.locator('tbody tr');
     const rowCount = await rows.count();
-    console.log(" total number of records before I clicked on Delete button: " + rowCount);
+    console.log("Step#4 - total number of records before I clicked on Delete button: " + rowCount);
+    console.log("Step#4 - going to loop trough rows of table to find new transDesr");
+
     for (let i = 0; i < rowCount; i++) {
       const row = rows.nth(i);
       const descr = await row.locator('td').nth(0).innerText(); // first column (Description)
       // const amount = await row.locator('td').nth(1).innerText(); // second column (Amount)
       // const date   = await row.locator('td').nth(2).innerText(); // third column (Date)
       if (descr === transDecr) {
-        // Click the delete button inside this row (assuming it's in the 4th <td>)
+        console.log("Step#4 in the loop of rows, found match of descriptions: " + transDecr);
         page.once('dialog', dialog => {
           //        OK                           Cancel
+          console.log("Step#4 - [delete] button clicked, we are in confurmation Dialog to accept it");
           dialog.accept().catch(() => {});// dialog.dismiss().catch(() => {});
         });
         // await row.locator('td').nth(3).getByRole('button', { name: /delete/i }).click();
         // await page.getByRole('row', { name: 'Test from Playwright 35.19 35' }).getByRole('button').click();
         // await page.locator('tr').filter({ hasText: transDecr }).locator('button').click();
         // await page.locator('tr:has-text("Test from Playwright 35.19")').locator('button').click();
-        console.log("in the loop of rows, found match of descriptions: " + transDecr);
         await page.locator(`tr:has-text("${transDecr}")`).locator('button').click();
         break;
       }
@@ -291,6 +337,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
   }); 
  
   await test.step("step#5: Verification of new activities is GONE from GIU!", async() => {
+    console.log("Step#5 - re-loging wit hJohn's credentioal to confirm record is gone");
     await page.getByRole('img', { name: 'User-DB' }).click();
     await page.locator('#uname').fill('John');
     await page.locator('#passw').fill('John');
@@ -298,17 +345,19 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
     await page.waitForLoadState('domcontentloaded');
     // very important to wait bfere table will load to GUI
     await page.waitForSelector('tr td:first-child'); 
-    // collecting 1st column to array
+    console.log("Step#5 - collecting 1st column 'Descriptions' to array");
     const activityTexts = await page.locator('tr td:first-child').allTextContents();
     let foundDecription = false;
     activityTexts.forEach((text) => {
       if (text === transDecr) foundDecription = true;
     });
+    console.log("Step#5 - confirming that transDescr is not found " + (!foundDecription));
     expect (foundDecription).toBe(false);
     await page.getByRole('img', { name: 'Home' }).click();
   });
 
   await test.step("step#5: Verification of new activities is GONE by API-Get", async() => {
+    console.log("Step#5 - using /getExpenses API to confirm it not returning deleted record");
     const endpoint = "/getExpenses?userId=46";
     const resp = await request.get(endpoint); 
     expect (resp.status()).toBe(200);
