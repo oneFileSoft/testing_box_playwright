@@ -9,8 +9,11 @@ function extractBetween(text, startMarker, endMarker = null) {
     return text.substring(from, endIndex).trim();
 }
   
-async function getSessionStorage(page) {
-    return await page.evaluate(() => {
+async function getSessionStorage(page, expectedKey = undefined) {
+    return await page.evaluate(async () => {
+        // if (expectedKey !== undefined) {
+        //     page.waitForFunction(() => sessionStorage.getItem(expectedKey) !== null);
+        // }  
       const data = {};
       for (let i = 0; i < sessionStorage.length; i++) {
         const key = sessionStorage.key(i);
