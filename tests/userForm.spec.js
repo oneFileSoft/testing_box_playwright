@@ -148,6 +148,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
   let generatedId = 0;
   const myNumb = parseFloat(`${utils.getRandomInt()}.${utils.getRandomInt()}`);
   const transDecr = "Test from Playwright " + myNumb;
+  await page.evaluate(() => sessionStorage.clear());
   await findMatchInDataSet(request, "/getExpenses?userId=46", "expenses", "transDescr", transDecr);
 
   await test.step("step#1: INSERT new activities by API", async() => {
