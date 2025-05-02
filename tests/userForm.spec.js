@@ -276,6 +276,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
     console.log("Step#3 - synchronize sessionStorage: await page.waitForFunction(() => sessionStorage.getItem('user') !== null);");
     await page.waitForFunction(() => sessionStorage.getItem('user') !== null);
     const data = await utils.getSessionStorage(page);
+    console.log("ggggggggggggggg "+data.user)
     expect (data.user).toContain("John__46");
     await page.waitForSelector('tr td:first-child'); 
     await expect(page.locator('tr td:first-child').first()).toBeVisible();
