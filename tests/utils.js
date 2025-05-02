@@ -15,6 +15,7 @@ async function getSessionStorage(page) {
       for (let i = 0; i < sessionStorage.length; i++) {
         const key = sessionStorage.key(i);
         data[key] = sessionStorage.getItem(key);
+        console.log("***Session data: key="+key+", value="+data[key]);
       }
       return data;
     });

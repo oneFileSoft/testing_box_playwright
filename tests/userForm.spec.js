@@ -209,7 +209,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
       }
     }
     expect(expenceFound).toBe(true);
-    console.log("Step#2 - exted expence is found = " + expenceFound);
+    console.log("Step#2 - expected expence is found = " + expenceFound);
   });
 
   // await test.step("step#3: Verification of new activities appearence from GIU", async () => {
@@ -248,33 +248,10 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
   //   //   }
   //   // }
 
-  //   console.log("Step#3 - Robust wait-for-text block");
-  //   // Robust wait-for-text block
-  //   let foundDecription = false;
-  //   const timeout = 8000; // increase to 8s
-  //   const interval = 400; // slower polling
-  //   const maxTries = timeout / interval;
-  //   let tries = 0;
-    
-  //   while (!foundDecription && tries < maxTries) {
-  //     const activityTexts = await page.locator('tr td:first-child').allTextContents();
-  //     console.log(`[Try #${tries}] Found rows:`, activityTexts);
-    
-  //     if (activityTexts.includes(transDecr)) {
-  //       console.log("Strp#3 - In Loop: Found inserted description: " + transDecr);
-  //       foundDecription = true;
-  //       break;
-  //     }
-  //     await page.waitForTimeout(interval);
-  //     tries++;
-  //   }
-  //   console.log("Step#3 - After loop: Found inserted description: " + foundDecription);
-  //   expect(foundDecription).toBe(true);
-  //   await page.getByRole('img', { name: 'Home' }).click();
   // });  
   await test.step("step#3: Verification of new activities appearance from GUI", async () => {
     console.log("Step#3 - loggin into the system with John credentials to see added record");
-    await page.getByRole('img', { name: 'User-DB' }).click();
+    await page.getByRole('img', { name: 'Storage' }).click();
     await page.getByRole('img', { name: 'Home' }).click();
     await page.evaluate(() => {
       if (typeof window.loadTable === 'function') {
@@ -296,6 +273,10 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
       page.getByRole('button', { name: 'Authenticate' }).click()
     // ]);
     await page.waitForLoadState('domcontentloaded');
+    console.log("Step#3 - synchronize sessionStorage: await page.waitForFunction(() => sessionStorage.getItem('user') !== null);");
+    await page.waitForFunction(() => sessionStorage.getItem('user') !== null);
+    const data = await utils.getSessionStorage(page);
+    expect (data.user).toContain("John__46");
     await page.waitForSelector('tr td:first-child'); 
     await expect(page.locator('tr td:first-child').first()).toBeVisible();
   
@@ -380,8 +361,8 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
     await page.getByRole('img', { name: 'Home' }).click();
   });
 
-  await test.step("step#5: Verification of new activities is GONE by API-Get", async() => {
-    console.log("Step#5 - using /getExpenses API to confirm it not returning deleted record");
+  await test.step("step#6: Verification of new activities is GONE by API-Get", async() => {
+    console.log("Step#6 - using /getExpenses API to confirm it not returning deleted record");
     const endpoint = "/getExpenses?userId=46";
     const resp = await request.get(endpoint); 
     expect (resp.status()).toBe(200);
