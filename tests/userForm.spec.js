@@ -278,6 +278,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
     await page.waitForFunction(() => sessionStorage.getItem('user') !== null);
     const data = await utils.getSessionStorage(page);
     console.log("ggggggggggggggg "+data.user)
+    const logResponse = await request.get('/login.log');
     const logText = await logResponse.text();
     console.log("LOGIN LOG CONTENT:\n", logText);
 
