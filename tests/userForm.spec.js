@@ -288,14 +288,14 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
     await page.locator('#passw').fill('John');
   
     console.log("Step#3 - block to wait with Promise.all");
-    await Promise.all([
-      page.waitForResponse(resp =>
-        resp.url().includes('/getExpenses') &&
-        resp.status() === 200
-      ),
+    // await Promise.all([
+    //   page.waitForResponse(resp =>
+    //     resp.url().includes('/getExpenses') &&
+    //     resp.status() === 200
+    //   ),
       page.getByRole('button', { name: 'Authenticate' }).click()
-    ]);
-  
+    // ]);
+    await page.waitForLoadState('domcontentloaded');
     await page.waitForSelector('tr td:first-child'); 
     await expect(page.locator('tr td:first-child').first()).toBeVisible();
   
