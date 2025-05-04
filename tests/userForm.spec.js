@@ -56,8 +56,8 @@ test('Authenticate existing User', async ({ page }) => {
   //following, because they have unique type - easy to capture by locator
   // expect (await page.locator('input[type="date"]').isVisible()).toBeTruthy();
   expect (page.getByRole('heading', { name: 'Add Expense for test' })).toBeVisible(); 
-  // await page.waitForFunction(() => sessionStorage.getItem("user") !== null); 
-  const data = await utils.getSessionStorage(page, "user");
+  await page.waitForFunction(() => sessionStorage.getItem("user") !== null); 
+  const data = await utils.getSessionStorage(page);
   expect (data.user).toContain("test__46");
 });
 
