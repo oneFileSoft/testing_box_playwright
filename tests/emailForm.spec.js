@@ -58,6 +58,13 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
   });
 
   test('Successfull Email send', async ({ page }) => {
+    console.log("Filling required fielsd (all *), and selecting specific Email-To from combo-box");
+    console.log("All available options: " + 
+                `<select name="email" value={formData.email} onChange={handleChange} onBlur={handleBlur} className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" style={{ width: "100%" }}>
+                   <option value="test@testingbox.pw">General box: contact us</option>
+                   <option value="jenkins_agent@testingbox.pw"> Company Management </option>
+                   <option value="i_slava_i@yahoo.com"> Technical Support </option>
+                </select>`);
     const fName = "J" + utils.getRandomInt() + "J";
     await page.locator('input[name="firstName"]').fill(fName);
     const lName = "S" + utils.getRandomInt() + "S"
@@ -68,7 +75,16 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
     await page.locator('input[name="yourEmail"]').fill(email);
     await page.locator('textarea[name="message"]').fill("Test Email: " + fName + " " + lName);
 
-    const comboValue = await page.locator('select >> option').first().getAttribute('value');
+    // await page.selectOption('select[name="email"]', 'jenkins_agent@testingbox.pw');  // option #1
+    // const options = await page.locator('select[name="email"] >> option').all();      // option #2
+    // await page.selectOption('select[name="email"]', await options[1].getAttribute('value'));
+    // await page.selectOption('select[name="email"]', { label: 'Technical Support' }); //option #3
+    await page.selectOption('select[name="email"]', { label: 'Technical Support' });
+    // selection values from ComboBox:
+    // following lane will always extract value of 1st (0) index:
+    // const comboValue = await page.locator('select >> option').first().getAttribute('value');
+    // this statement - will extract value of SELECTED index"
+    const comboValue = await page.locator('select[name="email"]').inputValue();
     console.log("****Email test: F_Name = " + fName + ", L_Name = " + lName + " to: " + comboValue);
 
     await page.getByText('Submit').click();

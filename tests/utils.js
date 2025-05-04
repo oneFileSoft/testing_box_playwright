@@ -10,19 +10,36 @@ function extractBetween(text, startMarker, endMarker = null) {
 }
   
 async function getSessionStorage(page, expectedKey = undefined) {
-    return await page.evaluate(async () => {
-        // if (expectedKey !== undefined) {
-        //     page.waitForFunction(() => sessionStorage.getItem(expectedKey) !== null);
-        // }  
-      const data = {};
+    const keysNow = await page.evaluate(() => {
+      const keys = [];
+      for (let i = 0; i < sessionStorage.length; i++) {
+        keys.push(sessionStorage.key(i));
+      }
+      return keys;
+    });
+    console.log("Current sessionStorage keys:", keysNow);
+  
+    if (expectedKey !== undefined) {
+      await page.waitForFunction(
+        (key) => sessionStorage.getItem(key) !== null,
+        { timeout: 5000 },  // Set a shorter timeout for testing
+        expectedKey
+      );
+    }
+  
+    const data = await page.evaluate(() => {
+      const result = {};
       for (let i = 0; i < sessionStorage.length; i++) {
         const key = sessionStorage.key(i);
-        data[key] = sessionStorage.getItem(key);
-        console.log("***Session data: key="+key+", value="+data[key]);
+        result[key] = sessionStorage.getItem(key);
       }
-      return data;
+      return result;
     });
-}
+  
+    return data;
+  }
+  
+  
 
 async function getLocalStorage(page) {
     return await page.evaluate(() => {
