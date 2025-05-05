@@ -313,6 +313,8 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
   });
   
   await test.step("step#4: Delete this activities from GIU (by: userId + id)", async() => {
+    await page.getByRole('img', { name: 'Storage' }).click();
+    await page.getByRole('img', { name: 'Home' }).click();
     await page.getByRole('img', { name: 'User-DB' }).click();
     await page.locator('#uname').fill('John');
     await page.locator('#passw').fill('John');
