@@ -19,25 +19,6 @@ test.beforeEach(async ({ page }) => {
 });
 
 
-// await page.goto('https://testingbox.pw/');
-// await page.getByRole('img', { name: 'Storage' }).click();
-// await page.getByRole('textbox', { name: 'Username' }).click();
-// await page.locator('input[placeholder="Username"]').fill('abc');
-// await page.getByRole('textbox', { name: 'Password' }).click();
-// await page.getByRole('textbox', { name: 'Password' }).fill('vvv');
-// await page.getByText('user4713').click();
-// await page.getByRole('heading', { name: 'Please login using the' }).click();
-// await page.getByRole('button', { name: 'Submit' }).click();
-// await page.getByText('Error login').click();
-// await page.getByRole('textbox', { name: 'Username' }).click();
-// await page.getByRole('textbox', { name: 'Username' }).fill('user4713');
-// await page.getByRole('textbox', { name: 'Password' }).click();
-// await page.getByRole('textbox', { name: 'Password' }).fill('pass4243');
-// await page.getByRole('button', { name: 'Submit' }).click();
-// await page.getByText('User user4713 has been logged').click();
-
-
-
 test('Wrong UserName', async ({ page }) => {
   await page.locator('input[placeholder="Username"]').fill('abc');
   await page.locator('input[placeholder="Password"]').fill(pswrd);

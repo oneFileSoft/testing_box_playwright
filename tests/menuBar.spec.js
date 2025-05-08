@@ -1,10 +1,5 @@
 import { test, expect } from '@playwright/test';
 
-// test.beforeEach(async ({ page }) => {
-//   await page.goto('/');
-//   console.log(' ***********************    Current URL: ', page.url());
-//   await page.waitForLoadState();
-// });
 
 test('navigation throught menu Bar', async ({ page }) => {
     await page.goto('/');
