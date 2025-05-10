@@ -11,6 +11,6 @@ let intVal = utils.getRandomInt();
 // });
 
 test('flacky test checking for even number (test.describe.configure({ retries: 5 });)', async ( ) => {
-    console.log("test "+ intVal);
+    console.log("checking if number "+ intVal + " is even....");
     expect (intVal%2 == 0).toBeTruthy();
   });
