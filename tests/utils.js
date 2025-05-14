@@ -53,7 +53,7 @@ async function getLocalStorage(page) {
 }
   
 function getRandomInt() {
-    return Math.floor(Math.random() * 100) + 10;
+    return Math.floor(Math.random() * 100) + 100;
 }
 
 async function getComputedStyleProperty(page, locator, property) {
