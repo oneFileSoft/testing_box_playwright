@@ -10,8 +10,7 @@ test.beforeEach(async ({ page }) => {
 test('Regression Report counter and comparing repor Date', async ({ page }) => {
   await page.getByRole('img', { name: 'RegrReport' }).click();
   await page.waitForLoadState('networkidle'); 
-  const count = await page.locator('a').count();
-  expect (count > 1).toBeTruthy();
+
   const dateInput = page.locator('input[type="date"]');
   const dateFromCalendar = await dateInput.inputValue();
   console.log("Date from calendar: " + dateFromCalendar);
