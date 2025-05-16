@@ -25,7 +25,7 @@ test('navigation throught menu Bar', async ({ page }) => {
     expect (await page.getByRole('heading', { name: 'Regression' })).toBeVisible();
     expect (await page.getByRole('button', { name: 'Contact Us' })).toBeVisible();
 
-    await page.getByRole('button', { name: 'Contact Us' }).click();
+    await page.getByRole('img', { name: 'Contact' }).click();
     expect (await page.getByRole('heading', { name: 'Contact Us' })).toBeVisible();
     expect (await page.getByText("Submit")).toBeVisible();
   });
