@@ -37,10 +37,8 @@ async function getSessionStorage(page, expectedKey = undefined) {
     });
   
     return data;
-  }
+}
   
-  
-
 async function getLocalStorage(page) {
     return await page.evaluate(() => {
       const data = {};
@@ -52,9 +50,7 @@ async function getLocalStorage(page) {
     });
 }
   
-function getRandomInt() {
-    return Math.floor(Math.random() * 100) + 100;
-}
+function getRandomInt() { return Math.floor(Math.random() * 100) + 100; } // returns range of numbers 100–199
 
 async function getComputedStyleProperty(page, locator, property) {
     const elementHandle = await locator.elementHandle();
