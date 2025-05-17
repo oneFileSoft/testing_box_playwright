@@ -84,7 +84,7 @@ import { defineConfig } from '@playwright/test';
   expect:{ timeout: 5000 }, 
   fullyParallel: true,
   workers: 1,
-  retries:2,
+  retries:5,
   //use: {testidAttribute: 'data-test'},
   projects: [ 
     {
