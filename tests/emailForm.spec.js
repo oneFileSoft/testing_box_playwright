@@ -50,11 +50,8 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
     await page.locator('input[name="yourEmail"]').fill("jsmith@yahoo.com");
 
     await page.getByText('Submit').click();
-    // await page.getByRole('button', { name: 'Submit' }).click();
     expect(await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe("Message is required");
     expect(page.getByText("Please, fill out all required")).toBeVisible();
-    await page.waitForTimeout(10000);
-    // expect(await page.getByText('Please, fill out all required')).toBeHidden()
   });
 
   test('Successfull Email send', async ({ page }) => {
