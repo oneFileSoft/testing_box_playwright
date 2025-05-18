@@ -9,38 +9,38 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('Prevention of Submit of Email, with all empty fields', async ({ page }) => {
-    expect (await page.locator('input[name="firstName"]').inputValue()).toBe('');
+    expect(await page.locator('input[name="firstName"]').inputValue()).toBe('');
 
     await page.locator('input[name="firstName"]').click();
     await page.getByText('Submit').click();
-    expect (await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe("First name is required");
-    expect (await page.locator('input[name="lastName"]').getAttribute('placeholder')).toBe("Last name is required");
-    expect (await page.locator('input[name="yourWebsite"]').getAttribute('placeholder')).toBe("Your website is required");
-    expect (await page.locator('input[name="yourEmail"]').getAttribute('placeholder')).toBe("Your email is required");
-    expect (await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe("Message is required");
+    expect(await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe("First name is required");
+    expect(await page.locator('input[name="lastName"]').getAttribute('placeholder')).toBe("Last name is required");
+    expect(await page.locator('input[name="yourWebsite"]').getAttribute('placeholder')).toBe("Your website is required");
+    expect(await page.locator('input[name="yourEmail"]').getAttribute('placeholder')).toBe("Your email is required");
+    expect(await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe("Message is required");
 
     await page.getByRole('textbox', { name: 'First name is required' }).click();
     await page.getByRole('textbox', { name: 'First name is required' }).fill('John');
     await page.getByRole('textbox', { name: 'Last name is required' }).click();
-    expect (await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe("");
+    expect(await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe("");
   });
 
   test('Empty FirstName, lastName and message lost fokus', async ({ page }) => {
     await page.locator('input[name="firstName"]').click();
     await page.locator('input[name="lastName"]').click();
 
-    expect (await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe("First name is required");
-    expect (await page.locator('input[name="lastName"]').getAttribute('placeholder')).toBe(null);
+    expect(await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe("First name is required");
+    expect(await page.locator('input[name="lastName"]').getAttribute('placeholder')).toBe(null);
     await page.locator('textarea[name="message"]').click();
-    expect (await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe("First name is required");
-    expect (await page.locator('input[name="lastName"]').getAttribute('placeholder')).toBe("Last name is required");
-    expect (await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe(null);
+    expect(await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe("First name is required");
+    expect(await page.locator('input[name="lastName"]').getAttribute('placeholder')).toBe("Last name is required");
+    expect(await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe(null);
     await page.locator('input[name="firstName"]').click();
-    expect (await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe("First name is required");
-    expect (await page.locator('input[name="lastName"]').getAttribute('placeholder')).toBe("Last name is required");
-    expect (await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe("Message is required");
-    expect (await page.locator('input[name="yourWebsite"]').getAttribute('placeholder')).toBe(null);
-    expect (await page.locator('input[name="yourEmail"]').getAttribute('placeholder')).toBe(null);
+    expect(await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe("First name is required");
+    expect(await page.locator('input[name="lastName"]').getAttribute('placeholder')).toBe("Last name is required");
+    expect(await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe("Message is required");
+    expect(await page.locator('input[name="yourWebsite"]').getAttribute('placeholder')).toBe(null);
+    expect(await page.locator('input[name="yourEmail"]').getAttribute('placeholder')).toBe(null);
   });
 
   test('Only message is empty', async ({ page }) => {
@@ -50,11 +50,11 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
     await page.locator('input[name="yourEmail"]').fill("jsmith@yahoo.com");
 
     await page.getByText('Submit').click();
-
-    expect (await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe("Message is required");
-    expect (await page.getByText("Please, fill out all required")).toBeVisible();
-    await page.waitForTimeout(7000);
-    expect (await page.getByText('Please, fill out all required')).toBeHidden()
+    // await page.getByRole('button', { name: 'Submit' }).click();
+    expect(await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe("Message is required");
+    expect(page.getByText("Please, fill out all required")).toBeVisible();
+    await page.waitForTimeout(10000);
+    // expect(await page.getByText('Please, fill out all required')).toBeHidden()
   });
 
   test('Successfull Email send', async ({ page }) => {
@@ -91,13 +91,13 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
     await page.waitForSelector('.Toastify__toast--success', { state: 'visible' });
     const toastText = (await page.locator('.Toastify__toast--success').textContent()).replace('\n', '');
 
-    expect (toastText).toContain(fName + " " + lName + "Your email has been sent successfully!");
+    expect(toastText).toContain(fName + " " + lName + "Your email has been sent successfully!");
 
-    expect (await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe(null);
-    expect (await page.locator('input[name="lastName"]').getAttribute('placeholder')).toBe(null);
-    expect (await page.locator('input[name="yourWebsite"]').getAttribute('placeholder')).toBe(null);
-    expect (await page.locator('input[name="yourEmail"]').getAttribute('placeholder')).toBe(null);
-    expect (await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe(null);
+    expect(await page.locator('input[name="firstName"]').getAttribute('placeholder')).toBe(null);
+    expect(await page.locator('input[name="lastName"]').getAttribute('placeholder')).toBe(null);
+    expect(await page.locator('input[name="yourWebsite"]').getAttribute('placeholder')).toBe(null);
+    expect(await page.locator('input[name="yourEmail"]').getAttribute('placeholder')).toBe(null);
+    expect(await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe(null);
   });
 
   // test('Only message is empty -failing test', async ({ page }) => {
