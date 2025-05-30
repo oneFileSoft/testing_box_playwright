@@ -59,7 +59,7 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
     console.log("All available options: " + 
                 `<select name="email" value={formData.email} onChange={handleChange} onBlur={handleBlur} className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" style={{ width: "100%" }}>
                    <option value="test@testingbox.pw">General box: contact us</option>
-                   <option value="jenkins_agent@testingbox.pw"> Company Management </option>
+                   <option value="test@testingbox.pw"> TestingBox email </option>
                    <option value="i_slava_i@yahoo.com"> Technical Support </option>
                 </select>`);
     const fName = "J" + utils.getRandomInt() + "J";
