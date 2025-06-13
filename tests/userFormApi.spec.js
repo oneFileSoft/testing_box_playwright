@@ -157,7 +157,7 @@ async function findMatchInDataSet(request, endpoint, dataKey, fieldName, expecte
     console.log(line);
   }
 }
-//res.status(200).json({ success: true, message: "User expenses include " + transDescr + " for the amount + " + transTotal + " inserted successfully!"
+
 test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ page, request }) => {
   let generatedId = 0;
   const myNumb = parseFloat(`${utils.getRandomInt()}.${utils.getRandomInt()}`);
@@ -167,6 +167,10 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
 
   await test.step("step#1: INSERT new activities by API", async() => {
     console.log("Step#1 - insert to user = Test (45) new expence record: " + transDecr);
+    //    return res.status(200).json( { success: true, 
+    //       message: "User expenses include " + transDescr + " for the amount + " + transTotal + " inserted successfully!", 
+    //       insertedId: result.insertId });
+
     const response = await request.post('/insertExpense', {
       data: {
         userId: '45',
@@ -184,7 +188,7 @@ test('Api test --- INSERT(Post) - GET(get) - DELETE(Delete) by GIU', async ({ pa
     console.log("      will verify just inserted record with [/getExpenses API] specifically for taransDescr="+transDecr)
       // const confirmResp = await request.get(`/getExpenses?userId=45`);
       // const confirmBody = await confirmResp.json();
-      // const inserted = confirmBody.expenses.some(item => item.transDescr === transDecr);
+      // const inserted = confirmBody.expenses.some(item => item.transDescr === transDecr); // found unique descr
       // console.log("Step#1 - umber transDescr ["+transDecr+"] is found: " + inserted);
       // expect(inserted).toBe(true); 
     await findMatchInDataSet(request, "/getExpenses?userId=45", "expenses", "transDescr", transDecr);

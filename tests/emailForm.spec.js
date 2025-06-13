@@ -51,7 +51,11 @@ test('Prevention of Submit of Email, with all empty fields', async ({ page }) =>
 
     await page.getByText('Submit').click();
     expect(await page.locator('textarea[name="message"]').getAttribute('placeholder')).toBe("Message is required");
-    expect(page.getByText("Please, fill out all required")).toBeVisible();
+    if (page.viewportSize()?.width && page.viewportSize()?.width < 768) {
+      expect(page.getByText("Please, fill out all required fields!")).toBeVisible();
+    } else {  
+      expect(page.getByText("Please, fill out all required")).toBeVisible();
+    }
   });
 
   test('Successfull Email send', async ({ page }) => {
