@@ -117,6 +117,11 @@ test('Api test --- Post - INSERT - no User found', async ({ request }) => {
 
 //res.status(500).json({ success: false, message: "Error inserting user expences to DB", error: error.message });
 test('Api test --- Post - INSERT - invalid amount', async ({ request }, testInfo) => {
+  const isMobile = testInfo.project.name === 'iPhone 13' || testInfo.project.name === 'Pixel 5';
+  if (isMobile) {
+    console.log(`Running test on mobile device: ${testInfo.project.name}`);
+    // Optional: perform additional mobile-specific checks
+  }
   const response = await request.post('/insertExpense', {
     data: {
       userId: '46',
