@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { runQuery } from './test_db.js';
-import aws_utils from './test_util.js';
+import { runQuery } from '../z_experiment/test_db.js';
+import aws_utils from '../z_experiment/test_util.js';
 // import { homedir } from 'os';
 // import { sk } from 'date-fns/locale';
 
@@ -28,7 +28,9 @@ test('extract rendered HTML and find price', async ({ page }) => {
   const okPriceListingFileName = "a_ok_price_"+dateStr+".txt";
   //const bCost  = await readFromFile('Documents', "a_dataJune26.csv");
   //const priceMap = loadFeedMap(bCost);
-  const dbResults = await runQuery();
+  // const dbResults = await aws_utils.runQuery();
+  const dbResults = await runQuery(3);
+
   // console.log(dbResults);
   const priceQuantityMapFromDB = aws_utils.loadFeedMapFromDB(dbResults);
   let wholeHtml = "";
