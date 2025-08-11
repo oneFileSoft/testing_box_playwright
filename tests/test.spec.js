@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { runQuery } from './test_db';
-import aws_utils from './test_util.js';
+import { runQuery } from '../z_experiment/test_db.js';
+import aws_utils from '../z_experiment/test_util.js';
 
 
 
