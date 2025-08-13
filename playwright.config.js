@@ -87,10 +87,10 @@ import { defineConfig, devices } from '@playwright/test';
   retries:3,
   //use: {testidAttribute: 'data-test'},
   projects: [ 
-    // { name: 'iPhone 13', use: { ...devices['iPhone 13'], trace: "retain-on-failure", screenshot: "on-first-failure" } },
-    // { name: 'Pixel 5',   use: { ...devices['Pixel 5'],   trace: "retain-on-failure", screenshot: "on-first-failure" } },
-    { name: 'chromium', use: { browserName: 'chromium', video:"retain-on-failure", trace:"retain-on-failure", screenshot:"on-first-failure" } }
-    //,{ name: 'firefox', use: { browserName: 'firefox' }, trace: "retain-on-failure" },
+    { name: 'iPhone 13', use: { ...devices['iPhone 13'], trace: "retain-on-failure", screenshot: "on-first-failure" } },
+    { name: 'Pixel 5',   use: { ...devices['Pixel 5'],   trace: "retain-on-failure", screenshot: "on-first-failure" } },
+    { name: 'chromium', use: { browserName: 'chromium', video:"retain-on-failure", trace:"retain-on-failure", screenshot:"on-first-failure" } },
+    { name: 'firefox', use: { browserName: 'firefox' }, trace: "retain-on-failure" },
     // { name: 'webkit',  use: { browserName: 'webkit' }, trace: "retain-on-failure" },
     // { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
   ]
